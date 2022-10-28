@@ -1,51 +1,58 @@
-import { StatusBar } from 'expo-status-bar';
-import { View } from 'react-native';
-import styled from 'styled-components/native';
-
-const Post = styled.View`
-flex-direction: row;
-padding:15px;
-border-bottom-width: 1px;
-border-bottom-color: rgba(0,0,0,0.1);
-border-bottom-style: solid;
-margin-top: 10px;
-`;
-
-const PostDetails = styled.View`;
-
-`
-
-const PostDate = styled.Text`
-font-size:12px;
-color: rgba(0,0,0,0.4);
-margin-top: 2px;
-`;
-
-
-const PostTitle = styled.Text`
-font-size: 16px;
-font-weight: 700;
-`;
-
-const PostImage = styled.Image`
-width: 100px;
-height: 100px;
-border-radius:12px;
-margin-right:12px;
-`;
+import axios from "axios";
+import { StatusBar } from "expo-status-bar";
+import { useEffect, useState } from "react";
+import { View, Alert, FlatList, ActivityIndicator, Text, RefreshControl } from "react-native";
+import { Post } from "./components/Post";
 
 export default function App() {
+  const [items, setItems] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchPosts = () => {
+    setIsLoading(true);
+    axios
+      .get("https://635c0a0b66f78741d5907e85.mockapi.io/posts")
+      .then(({ data }) => {
+        setItems(data);
+      })
+      .catch((err) => {
+        console.log(err);
+        Alert.alert("Ошибка при получении");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
+  useEffect(fetchPosts, []);
+  if (isLoading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ActivityIndicator size="large" />
+        <Text style={{ marginTop: 15 }}>Загрузка...</Text>
+      </View>
+    );
+  }
   return (
     <View>
-      <Post>
-        <PostImage source={{uri:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrvMUm5Y7_aJDKxv8_fQTbhMHaYOlevDfbzg&usqp=CAU"}}/>
-        <PostDetails>
-        <PostTitle>Тестовая статья</PostTitle>
-        <PostDate>27/10/2022</PostDate>
-        </PostDetails>
-      </Post>
+      <FlatList
+      refreshControl={<RefreshControl refreshing={isLoading} onRefresh={fetchPosts}/>}
+        data={items}
+        renderItem={({ item }) => (
+          <Post
+            title={item.title}
+            imageUrl={item.imageUrl}
+            createAt={item.createAt}
+          />
+        )}
+      />
       <StatusBar theme="auto" />
     </View>
   );
 }
-
