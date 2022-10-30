@@ -1,9 +1,17 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { View, Alert, FlatList, ActivityIndicator, Text, RefreshControl, TouchableOpacity } from "react-native";
+import {
+  View,
+  Alert,
+  FlatList,
+  ActivityIndicator,
+  Text,
+  RefreshControl,
+  TouchableOpacity,
+} from "react-native";
 import { Post } from "../components/Post";
 
-export const HomeScreen = () => {
+export const HomeScreen = ({ navigation }) => {
   const [items, setItems] = useState();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -16,7 +24,7 @@ export const HomeScreen = () => {
       })
       .catch((err) => {
         console.log(err);
-        Alert.alert("Ошибка","Не удалось получить статьи");
+        Alert.alert("Ошибка", "Не удалось получить статьи");
       })
       .finally(() => {
         setIsLoading(false);
@@ -41,18 +49,27 @@ export const HomeScreen = () => {
   return (
     <View>
       <FlatList
-      refreshControl={<RefreshControl refreshing={isLoading} onRefresh={fetchPosts}/>}
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={fetchPosts} />
+        }
         data={items}
         renderItem={({ item }) => (
-       <TouchableOpacity>
-           <Post
-            title={item.title}
-            imageUrl={item.imageUrl}
-            createAt={item.createAt}
-          />
-       </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("FullPost", {
+                id: item.id,
+                title: item.title,
+              })
+            }
+          >
+            <Post
+              title={item.title}
+              imageUrl={item.imageUrl}
+              createdAt={item.createdAt}
+            />
+          </TouchableOpacity>
         )}
       />
     </View>
   );
-}
+};
