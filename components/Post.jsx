@@ -31,8 +31,17 @@ const PostImage = styled.Image`
   border-radius: 12px;
   margin-right: 12px;
 `;
+// обрезаю заголовок
+const truncateTitle = (str) => {
+  if (str.length >= 45) {
+    return str.substring(0, 45) + "...";
+  }
+  return str;
+};
 
-export const Post = ({ title, imageUrl, createAt }) => {
+// date-fns => format - для красиво отабражения даты
+
+export const Post = ({ title, imageUrl, createdAt }) => {
   return (
     <PostView>
       <PostImage
@@ -41,8 +50,8 @@ export const Post = ({ title, imageUrl, createAt }) => {
         }}
       />
       <PostDetails>
-        <PostTitle>{title}</PostTitle>
-        <PostDate>{createAt}</PostDate>
+        <PostTitle>{truncateTitle(title)}</PostTitle>
+        <PostDate>{new Date(createdAt).toLocaleDateString()}</PostDate>
       </PostDetails>
     </PostView>
   );

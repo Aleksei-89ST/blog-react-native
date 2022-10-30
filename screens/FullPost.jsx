@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Alert,View } from "react-native";
+import { Alert, View } from "react-native";
 import styled from "styled-components/native";
 import Loading from "../components/Loading";
 
@@ -15,14 +15,17 @@ const PostText = styled.Text`
   line-height: 24px;
 `;
 
-export const FullPostScreen = () => {
+export const FullPostScreen = ({ route,navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState();
+  const { id, title } = route.params;
 
   useEffect(() => {
-    setIsLoading(true);
+    navigation.setOptions({
+        title,
+    })
     axios
-      .get("https://635c0a0b66f78741d5907e85.mockapi.io/posts/1")
+      .get("https://635c0a0b66f78741d5907e85.mockapi.io/posts/" + id)
       .then(({ data }) => {
         setData(data);
       })
@@ -36,9 +39,7 @@ export const FullPostScreen = () => {
   }, []);
 
   if (isLoading) {
-    return (
-     <Loading/>
-    );
+    return <Loading />;
   }
 
   return (
@@ -48,9 +49,7 @@ export const FullPostScreen = () => {
           uri: data.imageUrl,
         }}
       />
-      <PostText>
-     {data.text}
-      </PostText>
+      <PostText>{data.text}</PostText>
     </View>
   );
 };
