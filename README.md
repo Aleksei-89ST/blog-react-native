@@ -1,5 +1,4 @@
 # news-blog-react-native
-
 Описание работы в app:
 Создал мобильное приложение на Android / iOS.
 Подключал роутинг для моб. приложения.
@@ -8,5 +7,5 @@
 Делал перезагрузку контента по свайпу.
 Рендерил список записей.
 Работал с библиотекой styled-components.
-[news-blog](https://user-images.githubusercontent.com/90722666/198876951-b9dd4968-7f47-43ca-b870-3fc4f8673660.jpg)
 
+![news-blog](https://user-images.githubusercontent.com/90722666/209799662-d617c9cc-7984-40f7-ade7-869d565fe531.jpg)
